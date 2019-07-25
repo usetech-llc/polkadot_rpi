@@ -30,3 +30,22 @@
 *.exe
 *.out
 *.app
+
+# Build folder
+bin
+
+# Temporary test files
+Testing
+
+# cmake
+CMakeCache.txt
+CMakeFiles
+*.cmake
+Makefile
+*.tcl
+install_manifest.txt
+
+# logs
+*.log
+
+src/private_key.h
