@@ -11,3 +11,10 @@ sudo mv wpp/websocketpp /usr/local/include/websocketpp
 
 Also, please clone and build the sr25519-crust library as instructed in its repository:
 https://github.com/Warchant/sr25519-crust.git
+
+## Build and run
+```
+cmake .
+make
+bin/polkaui
+```
