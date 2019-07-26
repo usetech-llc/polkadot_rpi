@@ -9,6 +9,11 @@ using namespace std;
 
 string addressFrom = "5ECcjykmdAQK71qHBCkEWpWkoMJY6NXvpdKy8UeMx16q5gFr";
 string addressTo = "5FpxCaAovn3t2sTsbBeT5pWTj2rg392E8QoduwAyENcPrKht";
+int buttonTextFontSize = 50;
+int balanceFontSize = 40;
+int addressFontSize = 30;
+int statusFontSize = 20;
+int addressLabelCutoff = 10;
 
 GtkWidget *MainWindow;
 GtkWidget *background;
@@ -26,9 +31,9 @@ void UpdateBalance(double balance) {
     char balanceStr[1024];
 
     if (balance >= 1)
-        sprintf(balanceStr, "<span size='xx-large' color='#CCCCCC'><b>Wallet Balance:</b> %f DOT</span>", balance);
+        sprintf(balanceStr, "<span font='%d' color='#CCCCCC'><b>Balance:</b> %f DOT</span>", balanceFontSize, balance);
     else
-        sprintf(balanceStr, "<span size='xx-large' color='#CCCCCC'><b>Wallet Balance:</b> %f mDOT</span>",
+        sprintf(balanceStr, "<span font='%d' color='#CCCCCC'><b>Balance:</b> %f mDOT</span>", balanceFontSize,
                 balance * 1000);
     gtk_label_set_markup(GTK_LABEL(balanceLabel), balanceStr);
     gtk_widget_show(balanceLabel);
@@ -36,7 +41,7 @@ void UpdateBalance(double balance) {
 
 void UpdateProgress(string msg) {
     char progressStr[1024];
-    sprintf(progressStr, "<span size='medium' color='#CCCCCC'>Status: %s</span>", msg.c_str());
+    sprintf(progressStr, "<span font='%d' color='#CCCCCC'>Status: %s</span>", statusFontSize, msg.c_str());
     gtk_label_set_markup(GTK_LABEL(progressLabel), progressStr);
     gtk_widget_show(progressLabel);
 }
@@ -74,12 +79,17 @@ gboolean button_click_event(GtkWidget *widget, GdkEventButton *event, gpointer d
 }
 
 void CreateButton() {
-    button = gtk_button_new_with_label("Send DOTs");
+    button = gtk_button_new_with_label("");
+    GList *list = gtk_container_get_children(GTK_CONTAINER(button));
+
+    char btnText[128];
+    sprintf(btnText, "<span font='%d'>Send 1 mDOT</span>", buttonTextFontSize);
+    gtk_label_set_markup(GTK_LABEL(list->data), btnText);
 
     g_signal_connect(button, "clicked", G_CALLBACK(button_click_event), (gpointer)fixedPanel);
 
     /* This packs the button into the fixed containers window. */
-    gtk_fixed_put(GTK_FIXED(fixedPanel), button, 50, 270);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), button, 50, 280);
 
     /* The final step is to display this newly created widget. */
     gtk_widget_show(button);
@@ -92,18 +102,19 @@ void CreateLabels() {
     progressLabel = gtk_label_new(NULL);
 
     char addrLbl[1024];
-    sprintf(addrLbl, "<span size='large' color='#CCCCCC'><b>From Wallet Address:</b> %s</span>", addressFrom.c_str());
+    sprintf(addrLbl, "<span font='%d' color='#CCCCCC'><b>Wallet:</b> %s...</span>", addressFontSize,
+            addressFrom.substr(0, addressLabelCutoff).c_str());
     gtk_label_set_markup(GTK_LABEL(addressLabelFrom), addrLbl);
 
-    sprintf(addrLbl, "<span size='large' color='#CCCCCC'><b>To Receiving Address:</b> %s</span>", addressTo.c_str());
+    sprintf(addrLbl, "<span font='%d' color='#CCCCCC'><b>Send to:</b> %s...</span>", addressFontSize,
+            addressTo.substr(0, addressLabelCutoff).c_str());
     gtk_label_set_markup(GTK_LABEL(addressLabelTo), addrLbl);
-    gtk_label_set_markup(GTK_LABEL(balanceLabel),
-                         "<span size='xx-large' color='#CCCCCC'><b>Wallet Balance:</b> ?</span>");
-    gtk_label_set_markup(GTK_LABEL(progressLabel), "<span size='meduim' color='#CCCCCC'>Status: Ready</span>");
+    gtk_label_set_markup(GTK_LABEL(balanceLabel), "");
+    gtk_label_set_markup(GTK_LABEL(progressLabel), "");
 
-    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelFrom, 50, 100);
-    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelTo, 50, 120);
-    gtk_fixed_put(GTK_FIXED(fixedPanel), balanceLabel, 50, 170);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelFrom, 50, 80);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelTo, 50, 130);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), balanceLabel, 50, 180);
     gtk_fixed_put(GTK_FIXED(fixedPanel), progressLabel, 50, 250);
 
     gtk_widget_show(addressLabelFrom);
