@@ -31,10 +31,10 @@ void UpdateBalance(double balance) {
     char balanceStr[1024];
 
     if (balance >= 1)
-        sprintf(balanceStr, "<span font='%d' color='#CCCCCC'><b>Balance:</b> %.3f DOT</span>", balanceFontSize,
+        sprintf(balanceStr, "<span font='%d' color='#00FF00'><b>Balance:</b> %.3f DOT</span>", balanceFontSize,
                 balance);
     else
-        sprintf(balanceStr, "<span font='%d' color='#CCCCCC'><b>Balance:</b> %.3f mDOT</span>", balanceFontSize,
+        sprintf(balanceStr, "<span font='%d' color='#00FF00'><b>Balance:</b> %.3f mDOT</span>", balanceFontSize,
                 balance * 1000);
     gtk_label_set_markup(GTK_LABEL(balanceLabel), balanceStr);
     gtk_widget_show(balanceLabel);
