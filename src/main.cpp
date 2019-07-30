@@ -9,11 +9,11 @@ using namespace std;
 
 string addressFrom = "5ECcjykmdAQK71qHBCkEWpWkoMJY6NXvpdKy8UeMx16q5gFr";
 string addressTo = "5FpxCaAovn3t2sTsbBeT5pWTj2rg392E8QoduwAyENcPrKht";
-int buttonTextFontSize = 50;
-int balanceFontSize = 40;
-int addressFontSize = 30;
-int statusFontSize = 20;
-int addressLabelCutoff = 10;
+int buttonTextFontSize = 70;
+int balanceFontSize = 60;
+int addressFontSize = 50;
+int statusFontSize = 30;
+int addressLabelCutoff = 15;
 
 GtkWidget *MainWindow;
 GtkWidget *background;
@@ -64,6 +64,8 @@ void SendDotsThread() {
             UpdateProgress("Transferring DOTs - Registered in Network...");
         if (result == "finalized") {
             UpdateProgress("Transferring DOTs - Transaction Mined!");
+            usleep(5000000);
+            UpdateProgress("Ready");
         }
     });
 }
@@ -89,7 +91,7 @@ void CreateButton() {
     g_signal_connect(button, "clicked", G_CALLBACK(button_click_event), (gpointer)fixedPanel);
 
     /* This packs the button into the fixed containers window. */
-    gtk_fixed_put(GTK_FIXED(fixedPanel), button, 50, 280);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), button, 50, 600);
 
     /* The final step is to display this newly created widget. */
     gtk_widget_show(button);
@@ -112,10 +114,10 @@ void CreateLabels() {
     gtk_label_set_markup(GTK_LABEL(balanceLabel), "");
     gtk_label_set_markup(GTK_LABEL(progressLabel), "");
 
-    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelFrom, 50, 80);
-    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelTo, 50, 130);
-    gtk_fixed_put(GTK_FIXED(fixedPanel), balanceLabel, 50, 180);
-    gtk_fixed_put(GTK_FIXED(fixedPanel), progressLabel, 50, 250);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelFrom, 50, 220);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelTo, 50, 320);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), balanceLabel, 50, 420);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), progressLabel, 50, 550);
 
     gtk_widget_show(addressLabelFrom);
     gtk_widget_show(addressLabelTo);
@@ -130,9 +132,9 @@ int main(int argc, char *argv[]) {
 
     gtk_init(&argc, &argv);
 
-    MainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL); // GTK_WINDOW_TOPLEVEL = Has a titlebar and border,
-                                                      // managed by the window manager.
-    gtk_window_set_title(GTK_WINDOW(MainWindow), "Polkadot GUI for C++ API");
+    MainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_decorated(GTK_WINDOW(MainWindow), false);
+    // gtk_window_set_title(GTK_WINDOW(MainWindow), "Polkadot GUI for C++ API");
     gtk_container_set_border_width(GTK_CONTAINER(MainWindow), 1);
     gtk_window_set_default_size(GTK_WINDOW(MainWindow), 400,
                                 300); // Size of the the client area (excluding the additional areas
