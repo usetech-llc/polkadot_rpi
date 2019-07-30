@@ -91,7 +91,7 @@ void CreateButton() {
     g_signal_connect(button, "clicked", G_CALLBACK(button_click_event), (gpointer)fixedPanel);
 
     /* This packs the button into the fixed containers window. */
-    gtk_fixed_put(GTK_FIXED(fixedPanel), button, 50, 600);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), button, 50, 550);
 
     /* The final step is to display this newly created widget. */
     gtk_widget_show(button);
@@ -114,10 +114,10 @@ void CreateLabels() {
     gtk_label_set_markup(GTK_LABEL(balanceLabel), "");
     gtk_label_set_markup(GTK_LABEL(progressLabel), "");
 
-    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelFrom, 50, 220);
-    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelTo, 50, 320);
-    gtk_fixed_put(GTK_FIXED(fixedPanel), balanceLabel, 50, 420);
-    gtk_fixed_put(GTK_FIXED(fixedPanel), progressLabel, 50, 550);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelFrom, 50, 170);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), addressLabelTo, 50, 270);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), balanceLabel, 50, 370);
+    gtk_fixed_put(GTK_FIXED(fixedPanel), progressLabel, 50, 500);
 
     gtk_widget_show(addressLabelFrom);
     gtk_widget_show(addressLabelTo);
