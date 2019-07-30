@@ -31,9 +31,10 @@ void UpdateBalance(double balance) {
     char balanceStr[1024];
 
     if (balance >= 1)
-        sprintf(balanceStr, "<span font='%d' color='#CCCCCC'><b>Balance:</b> %f DOT</span>", balanceFontSize, balance);
+        sprintf(balanceStr, "<span font='%d' color='#CCCCCC'><b>Balance:</b> %.3f DOT</span>", balanceFontSize,
+                balance);
     else
-        sprintf(balanceStr, "<span font='%d' color='#CCCCCC'><b>Balance:</b> %f mDOT</span>", balanceFontSize,
+        sprintf(balanceStr, "<span font='%d' color='#CCCCCC'><b>Balance:</b> %.3f mDOT</span>", balanceFontSize,
                 balance * 1000);
     gtk_label_set_markup(GTK_LABEL(balanceLabel), balanceStr);
     gtk_widget_show(balanceLabel);
@@ -49,11 +50,11 @@ void UpdateProgress(string msg) {
 void SubscribeBalance() {
     // Load balance from Polkadot API
     api->subscribeBalance(addressFrom, [&](uint128 balance) {
-        balance /= 1000000000;
+        balance /= 1000000000000;
         long balLong = (long)balance;
 
         // Show balance in the UI
-        UpdateBalance((double)balLong / 1000000.);
+        UpdateBalance((double)balLong / 1000.);
     });
 }
 
