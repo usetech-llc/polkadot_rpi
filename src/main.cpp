@@ -137,9 +137,7 @@ int main(int argc, char *argv[]) {
     gtk_window_set_decorated(GTK_WINDOW(MainWindow), false);
     // gtk_window_set_title(GTK_WINDOW(MainWindow), "Polkadot GUI for C++ API");
     gtk_container_set_border_width(GTK_CONTAINER(MainWindow), 1);
-    gtk_window_set_default_size(GTK_WINDOW(MainWindow), 400,
-                                300); // Size of the the client area (excluding the additional areas
-                                      // provided by the window manager)
+    gtk_widget_set_size_request(GTK_WIDGET(MainWindow), 1024, 768);
     gtk_window_set_position(GTK_WINDOW(MainWindow), GTK_WIN_POS_CENTER);
 
     /* Create a Fixed Container */
