@@ -49,11 +49,11 @@ void UpdateProgress(string msg) {
 void SubscribeBalance() {
     // Load balance from Polkadot API
     api->subscribeBalance(addressFrom, [&](uint128 balance) {
-        balance /= 1000000;
+        balance /= 1000000000;
         long balLong = (long)balance;
 
         // Show balance in the UI
-        UpdateBalance((double)balLong / 1000000000.);
+        UpdateBalance((double)balLong / 1000000.);
     });
 }
 
