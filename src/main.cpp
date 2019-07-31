@@ -132,13 +132,7 @@ void SubscribeBalance() {
         long balLong = (long)balance;
 
         // Show balance in the UI
-        allowTransfers = false;
         UpdateBalance(balanceLabel1, (double)balLong / 1000.);
-
-        UpdateProgress("Balance Updated");
-        usleep(5000000);
-        UpdateProgress("Ready");
-        allowTransfers = true;
     });
 
     api->subscribeBalance(addressTo, [&](uint128 balance) {
@@ -146,13 +140,7 @@ void SubscribeBalance() {
         long balLong = (long)balance;
 
         // Show balance in the UI
-        allowTransfers = false;
         UpdateBalance(balanceLabel2, (double)balLong / 1000.);
-
-        UpdateProgress("Balance Updated");
-        usleep(5000000);
-        UpdateProgress("Ready");
-        allowTransfers = true;
     });
 }
 
