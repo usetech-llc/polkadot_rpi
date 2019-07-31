@@ -1,6 +1,7 @@
 #include <clocale>
 #include <gtk/gtk.h>
 #include <iostream>
+#include <mutex>
 #include <polkacpp/polkacpp.h>
 #include <thread>
 
@@ -52,6 +53,8 @@ thread *workerThread = nullptr;
 thread *updateProgressThread = nullptr;
 IApplication *api;
 
+mutex uilock;
+
 void UpdateBalance(GtkWidget *label, double balance) {
     char balanceStr[1024];
 
@@ -64,8 +67,11 @@ void UpdateBalance(GtkWidget *label, double balance) {
     else
         sprintf(balanceStr, "<span font='%d' font_family='MullerBold' color='#00FF00'>%.1f mDOT</span>",
                 balanceFontSize, balance * 1000);
+
+    uilock.lock();
     gtk_label_set_markup(GTK_LABEL(label), balanceStr);
     gtk_widget_show(label);
+    uilock.unlock();
 }
 
 void UpdateProgress(string msg) {
@@ -74,8 +80,11 @@ void UpdateProgress(string msg) {
             "<span font='%d' font_family='MullerBold' color='#000'>Status:</span><span font='%d' "
             "font_family='MullerRegular' color='#000'> %s</span>",
             statusFontSize, statusFontSize, msg.c_str());
+
+    uilock.lock();
     gtk_label_set_markup(GTK_LABEL(progressLabel), progressStr);
     gtk_widget_show(progressLabel);
+    uilock.unlock();
 }
 
 void UpdateProgressBar(int greenDots, int totalDots) {
@@ -96,8 +105,11 @@ void UpdateProgressBar(int greenDots, int totalDots) {
             "<span font='95' font_family='MullerBold' color='#27d222'>%s</span>"
             "<span font='95' font_family='MullerBold' color='#d8d8d8'>%s</span>",
             greenStr, greyStr);
+
+    uilock.lock();
     gtk_label_set_markup(GTK_LABEL(progressBarLabel), progressStr);
     gtk_widget_show(progressBarLabel);
+    uilock.unlock();
 }
 
 void UpdateProgressBarThread() {
@@ -130,8 +142,11 @@ void SubscribeBalance() {
     });
 }
 
+//#define EMULATE
+
 void SendDotsThread() {
     UpdateProgress("Sending transaction...");
+#ifndef EMULATE
     api->signAndSendTransfer(addressFrom, senderPrivateKeyStr, addressTo, 1000000000000, [&](string result) {
         if (result == "ready")
             UpdateProgress("Registered in Network...");
@@ -142,6 +157,15 @@ void SendDotsThread() {
             UpdateProgress("Ready");
         }
     });
+#else
+    usleep(1000000);
+    UpdateProgress("Registered in Network...");
+    usleep(1000000);
+    UpdateProgress("Transaction Mined!");
+    inProgress = false;
+    usleep(1000000);
+    UpdateProgress("Ready");
+#endif
 }
 
 gboolean button_click_event(GtkWidget *widget, GdkEventButton *event, gpointer data) {
@@ -160,7 +184,6 @@ gboolean button_click_event(GtkWidget *widget, GdkEventButton *event, gpointer d
     workerThread = new thread(SendDotsThread);
     updateProgressThread = new thread(UpdateProgressBarThread);
 
-    cout << "clicked" << endl;
     return FALSE; // Return false so event will be called again
 }
 
@@ -279,6 +302,10 @@ int main(int argc, char *argv[]) {
     if (workerThread) {
         workerThread->join();
         delete workerThread;
+    }
+    if (updateProgressThread) {
+        updateProgressThread->join();
+        delete updateProgressThread;
     }
 
     api->unsubscribeBalance(addressFrom);
