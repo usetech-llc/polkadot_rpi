@@ -12,6 +12,8 @@ using namespace std;
 string addressFrom = "5ECcjykmdAQK71qHBCkEWpWkoMJY6NXvpdKy8UeMx16q5gFr";
 string addressTo = "5FpxCaAovn3t2sTsbBeT5pWTj2rg392E8QoduwAyENcPrKht";
 
+bool allowTransfers = false;
+
 // UI Parameters
 int statusLabelX = 380;
 int statusLabelY = 710;
@@ -130,7 +132,13 @@ void SubscribeBalance() {
         long balLong = (long)balance;
 
         // Show balance in the UI
+        allowTransfers = false;
         UpdateBalance(balanceLabel1, (double)balLong / 1000.);
+
+        UpdateProgress("Balance Updated");
+        usleep(5000000);
+        UpdateProgress("Ready");
+        allowTransfers = true;
     });
 
     api->subscribeBalance(addressTo, [&](uint128 balance) {
@@ -138,7 +146,13 @@ void SubscribeBalance() {
         long balLong = (long)balance;
 
         // Show balance in the UI
+        allowTransfers = false;
         UpdateBalance(balanceLabel2, (double)balLong / 1000.);
+
+        UpdateProgress("Balance Updated");
+        usleep(5000000);
+        UpdateProgress("Ready");
+        allowTransfers = true;
     });
 }
 
@@ -146,6 +160,7 @@ void SubscribeBalance() {
 
 void SendDotsThread() {
     UpdateProgress("Sending transaction...");
+    allowTransfers = false;
 #ifndef EMULATE
     api->signAndSendTransfer(addressFrom, senderPrivateKeyStr, addressTo, 1000000000000, [&](string result) {
         if (result == "ready")
@@ -155,6 +170,7 @@ void SendDotsThread() {
             inProgress = false;
             usleep(5000000);
             UpdateProgress("Ready");
+            allowTransfers = true;
         }
     });
 #else
@@ -169,6 +185,9 @@ void SendDotsThread() {
 }
 
 gboolean button_click_event(GtkWidget *widget, GdkEventButton *event, gpointer data) {
+    if (!allowTransfers)
+        return FALSE;
+
     if (workerThread) {
         workerThread->join();
         delete workerThread;
