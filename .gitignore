@@ -49,3 +49,4 @@ install_manifest.txt
 *.log
 
 src/private_key.h
+config.json
