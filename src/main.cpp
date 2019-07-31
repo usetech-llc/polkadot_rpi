@@ -12,7 +12,7 @@ using namespace std;
 string addressFrom = "5ECcjykmdAQK71qHBCkEWpWkoMJY6NXvpdKy8UeMx16q5gFr";
 string addressTo = "5FpxCaAovn3t2sTsbBeT5pWTj2rg392E8QoduwAyENcPrKht";
 
-bool allowTransfers = false;
+bool allowTransfers = true;
 
 // UI Parameters
 int statusLabelX = 380;
